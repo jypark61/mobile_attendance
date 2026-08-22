@@ -1,5 +1,5 @@
 {
-  "id": "./",
+  "id": "/mobile_attendance/",
   "name": "대치과학 모바일 출석부",
   "short_name": "대치과학 출석부",
   "start_url": "./index.html?launch=app",
@@ -12,7 +12,7 @@
       "src": "./icon-v2.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
