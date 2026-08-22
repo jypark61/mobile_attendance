@@ -66,6 +66,44 @@
     #installBtn { display: none; background: #111827; color: #fff; }
     #openBtn { background: #eef2ff; color: #111827; }
     .hint { margin-top: 17px; color: #6b7280; font-size: 13px; line-height: 1.6; }
+
+    /* 카카오톡 내부 브라우저에서만 표시 */
+    #kakaoGuide {
+      display: none;
+      margin-top: 20px;
+      padding: 22px 18px;
+      border: 2px solid #111827;
+      border-radius: 18px;
+      background: #fff7cc;
+      color: #111827;
+    }
+    #kakaoGuide .guide-title {
+      margin: 0 0 10px;
+      font-size: 21px;
+      font-weight: 900;
+    }
+    #kakaoGuide .guide-main {
+      margin: 0;
+      color: #111827;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.55;
+    }
+    #kakaoGuide .guide-sub {
+      margin: 12px 0 0;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    body.kakao-browser .normal-content,
+    body.kakao-browser .buttons,
+    body.kakao-browser .hint {
+      display: none;
+    }
+    body.kakao-browser #kakaoGuide {
+      display: block;
+    }
   </style>
 
   <script>
@@ -84,12 +122,27 @@
 <body>
   <main class="card">
     <img class="logo" src="./icon-v2.png" alt="대치과학 모바일 출석부">
-    <div class="badge">대치과학 모바일 출석부 바로가기</div>
-    <h1>대치과학 모바일 출석부</h1>
-    <p>
-      대치과학 모바일 출석부 바로가기를 설치해주세요.<br>
-      설치 후 아이콘을 누르면 웹앱으로 바로 접속합니다.
-    </p>
+
+    <div class="normal-content">
+      <div class="badge">대치과학 모바일 출석부 바로가기</div>
+      <h1>대치과학 모바일 출석부</h1>
+      <p>
+        대치과학 모바일 출석부 바로가기를 설치해주세요.<br>
+        설치 후 아이콘을 누르면 웹앱으로 바로 접속합니다.
+      </p>
+    </div>
+
+    <div id="kakaoGuide" aria-live="polite">
+      <div class="guide-title">대치과학 모바일 출석부 설치 안내</div>
+      <p class="guide-main">
+        우측 하단 <strong>⋯</strong>을 누른 뒤<br>
+        <strong>다른 브라우저로 열기</strong>를 선택해주세요.
+      </p>
+      <p class="guide-sub">
+        카카오톡 내부 브라우저에서는 홈 화면 설치 기능이 제한됩니다.<br>
+        Chrome 또는 Safari로 열면 설치할 수 있습니다.
+      </p>
+    </div>
 
     <div class="buttons">
       <button id="installBtn" type="button">대치과학 모바일 출석부 설치</button>
@@ -104,6 +157,13 @@
   </main>
 
   <script>
+    const userAgent = navigator.userAgent || "";
+    const isKakaoTalk = /KAKAOTALK/i.test(userAgent);
+
+    if (isKakaoTalk) {
+      document.body.classList.add("kakao-browser");
+    }
+
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./service-worker.js");
     }
