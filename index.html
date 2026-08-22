@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>대치과학 모바일 출석부</title>
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" href="./icon.png">
+  <link rel="apple-touch-icon" href="./icon.png">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="대치과학 모바일 출석부">
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f6f7fb;
+      color: #111827;
+    }
+    .card {
+      width: min(92vw, 520px);
+      padding: 28px;
+      border: 1px solid #e5e7eb;
+      border-radius: 22px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 16px 50px rgba(15, 23, 42, .08);
+    }
+    .logo {
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+      border-radius: 24px;
+      margin-bottom: 14px;
+    }
+    h1 { margin: 0 0 8px; font-size: 27px; }
+    .badge {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    p { margin: 8px 0 18px; color: #6b7280; line-height: 1.65; }
+    .buttons { display: grid; gap: 10px; }
+    button, a {
+      width: 100%;
+      padding: 14px 16px;
+      border: 0;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    #installBtn { display: none; background: #111827; color: #fff; }
+    #openBtn { background: #eef2ff; color: #111827; }
+    .hint { margin-top: 17px; color: #6b7280; font-size: 13px; line-height: 1.6; }
+  </style>
+
+  <script>
+    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyBOuzofGV-61QWnzDPeKIQuVf134jJ4wPhvIwrfjczwMUpIu_gglbyzaRXpprvJSsb/exec";
+    const params = new URLSearchParams(location.search);
+    const installedLaunch =
+      params.get("launch") === "app" ||
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+
+    if (installedLaunch) {
+      location.replace(WEBAPP_URL);
+    }
+  </script>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="./icon.png" alt="대치과학 모바일 출석부">
+    <div class="badge">대치과학 모바일 출석부 바로가기</div>
+    <h1>대치과학 모바일 출석부</h1>
+    <p>
+      대치과학 모바일 출석부 바로가기를 설치해주세요.<br>
+      설치 후 아이콘을 누르면 웹앱으로 바로 접속합니다.
+    </p>
+
+    <div class="buttons">
+      <button id="installBtn" type="button">대치과학 모바일 출석부 설치</button>
+      <a id="openBtn" href="https://script.google.com/macros/s/AKfycbyBOuzofGV-61QWnzDPeKIQuVf134jJ4wPhvIwrfjczwMUpIu_gglbyzaRXpprvJSsb/exec" rel="noopener">출석부 바로 열기</a>
+    </div>
+
+    <div class="hint">
+      Android/PC: Chrome 또는 Edge에서 설치 버튼을 누르세요.<br>
+      iPhone: Safari에서 공유 → 홈 화면에 추가를 선택하세요.<br>
+      카카오톡 내부 브라우저에서는 우측 하단 점3개 → 기본(다른) 브라우저로 열기를 권장합니다.
+    </div>
+  </main>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js");
+    }
+
+    let deferredPrompt = null;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+      installBtn.style.display = "block";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+  </script>
+</body>
+</html>
